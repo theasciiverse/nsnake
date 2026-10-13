@@ -21,6 +21,10 @@ off_t Utils::File::size(std::string path)
 
 	return s.st_size;
 }
+#ifdef _WIN32
+	#define mkdir(path, mode) mkdir(path)
+#endif
+
 void Utils::File::mkdir_p(std::string path)
 {
 	std::string tmp(path);

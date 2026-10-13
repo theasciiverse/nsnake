@@ -2,6 +2,7 @@
 #define TIMER_H_DEFINED
 
 #include <sys/time.h>
+#include <stdint.h>
 
 ///
 class Timer
@@ -27,18 +28,18 @@ public:
 
 	/// Returns the whole timer's difference in milisseconds.
 	//	@note If the timer's not started, will return 0.
-	suseconds_t delta_us();
+	int64_t delta_us();
 
 	/// Returns the milisseconds part of the timer's difference.
-	suseconds_t delta_ms();
+	int64_t delta_ms();
 
 	/// Returns the seconds part of the timer's difference.
-	suseconds_t delta_s();
+	int64_t delta_s();
 
 protected:
-	suseconds_t startMark;
-	suseconds_t stopMark;
-	suseconds_t pausedMark;
+	int64_t startMark;
+	int64_t stopMark;
+	int64_t pausedMark;
 
 	bool running;
 	bool paused;
