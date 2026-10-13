@@ -100,6 +100,12 @@ void GameStateMainMenu::unload()
 
 void GameStateMainMenu::update()
 {
+	if (InputManager::isPressed(KEY_RESIZE))
+	{
+		this->layout->recenter();
+		return;
+	}
+
 	if (InputManager::isPressed("quit"))
 		StateManager::quit();
 

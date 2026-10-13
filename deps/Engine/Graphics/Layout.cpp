@@ -62,6 +62,18 @@ void Layout::windowsInit()
 
 	this->main->refresh();
 }
+void Layout::recenter()
+{
+	int current_height, current_width;
+	getmaxyx(stdscr, current_height, current_width);
+
+	if ((current_width  < intendedWidth) ||
+	    (current_height < intendedHeight))
+		return;
+
+	this->windowsExit();
+	this->windowsInit();
+}
 void Layout::windowsExit()
 {
 	SAFE_DELETE(this->main);

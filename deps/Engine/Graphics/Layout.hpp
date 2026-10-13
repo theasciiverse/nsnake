@@ -27,6 +27,12 @@ public:
 	virtual void windowsInit();
 	virtual void windowsExit();
 
+	/// Builds the windows again, centred on the terminal's
+	/// current size, after it was resized. A terminal now
+	/// smaller than the layout keeps the old windows, which
+	/// curses clips.
+	void recenter();
+
 	virtual void draw();
 
 	/// Layout's main Window, where all the others are inside.

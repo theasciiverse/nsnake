@@ -148,6 +148,12 @@ void Game::handleInput()
 	if (InputManager::noKeyPressed())
 		return;
 
+	if (InputManager::isPressed(KEY_RESIZE))
+	{
+		this->layout->recenter();
+		return;
+	}
+
 	// The only two absolute inputs are to quit and pause.
 	// Others depend if the game is paused or not.
 	if (InputManager::isPressed("quit"))
