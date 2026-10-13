@@ -7,6 +7,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <algorithm>
 
 // HACK This will be initialized at `Globals::init()`
 std::string BoardParser::directory = "";
@@ -16,13 +17,44 @@ std::string BoardParser::extension = "nsnake";
 
 
 
+/// Asciiverse: the folders levels are found in, in this order.
+/// The player's own (BoardParser::directory), then `levels/`
+/// where the game was started (av starts it in its install
+/// folder, where the archive puts the bundled levels), then
+/// the system one a package installs them to.
+static std::vector<std::string> levelDirectories()
+{
+	std::vector<std::string> dirs;
+
+	dirs.push_back(BoardParser::directory);
+	dirs.push_back("levels/");
+	dirs.push_back(SYSTEM_LEVEL_DIR "/");
+
+	return dirs;
+}
+
 Board* BoardParser::load(std::string name)
 {
-	std::string filename = (BoardParser::directory +
+	std::vector<std::string> dirs = levelDirectories();
+
+	std::string filename = (dirs[0] +
 	                        name +
 	                        "." +
 	                        BoardParser::extension);
 
+	for (size_t i = 0; i < dirs.size(); i++)
+	{
+		std::string path = (dirs[i] +
+		                    name +
+		                    "." +
+		                    BoardParser::extension);
+
+		if (Utils::File::exists(path))
+		{
+			filename = path;
+			break;
+		}
+	}
 	return BoardParser::loadFile(filename);
 }
 
@@ -173,7 +205,14 @@ Board* BoardParser::loadFile(std::string filename)
 }
 std::vector<std::string> BoardParser::listLevels()
 {
-	std::vector<std::string> levels = Utils::File::ls(BoardParser::directory);
+	std::vector<std::string> levels;
+
+	std::vector<std::string> dirs = levelDirectories();
+	for (size_t i = 0; i < dirs.size(); i++)
+	{
+		std::vector<std::string> found = Utils::File::ls(dirs[i]);
+		levels.insert(levels.end(), found.begin(), found.end());
+	}
 
 	// Remove files that doesn't end with the default file extension
 	//
@@ -198,6 +237,10 @@ std::vector<std::string> BoardParser::listLevels()
 			--it;
 		}
 	}
+
+	// A level in more than one folder is listed once
+	std::sort(levels.begin(), levels.end());
+	levels.erase(std::unique(levels.begin(), levels.end()), levels.end());
 
 	return levels;
 }

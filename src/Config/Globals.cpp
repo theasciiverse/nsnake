@@ -77,20 +77,29 @@ bool Globals::Error::strange_score_file     = false;
 
 void Globals::init()
 {
-	// Making sure default config directory exists
-	// By default it's `~/.local/share/nsnake/`
+	// Making sure default config directory exists.
+	// It's `$XDG_DATA_HOME/nsnake/`, by default `~/.local/share/nsnake/`
+	// (Asciiverse: XDG_DATA_HOME, and %APPDATA% on Windows)
 
-	Globals::Config::directory = (Utils::File::getHome() +
-	                              ".local/share/" +
-	                              PACKAGE + "/");
+	const char* xdg     = getenv("XDG_DATA_HOME");
+	const char* appdata = getenv("APPDATA");
 
-	if (Utils::String::front(Globals::Config::directory) != '/')
-	{
+	if (xdg && xdg[0] == '/')
+		Globals::Config::directory = (std::string(xdg) + "/" + PACKAGE + "/");
+
+	else if (! Utils::File::getHome().empty())
+		Globals::Config::directory = (Utils::File::getHome() +
+		                              ".local/share/" +
+		                              PACKAGE + "/");
+
+	else if (appdata && appdata[0] != '\0')
+		Globals::Config::directory = (std::string(appdata) + "/" + PACKAGE + "/");
+
+	else
 		// We couldn't get user's home directory,
 		// so let's fallback to `/tmp/.local/share...`
-		Globals::Config::directory = ("/tmp/" +
-		                              Globals::Config::directory);
-	}
+		Globals::Config::directory = (std::string("/tmp/.local/share/") +
+		                              PACKAGE + "/");
 
 	Globals::Config::file = (Globals::Config::directory +
 	                         "settings.ini");

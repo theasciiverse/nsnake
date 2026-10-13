@@ -81,11 +81,9 @@ void Utils::File::rm_f(std::string path)
 	if (Utils::File::isDirectory(path))
 		return;
 
-	// This is ALSO another big hack.
-	// God-dang it
-	std::string command("rm -f " + path);
-
-	system(command.c_str());
+	// remove() rather than running `rm -f`: no shell, so a path
+	// with spaces works, and so does Windows
+	remove(path.c_str());
 }
 
 bool Utils::File::create(std::string path)
