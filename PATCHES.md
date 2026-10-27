@@ -53,3 +53,9 @@ resized while playing. Windows: built with MinGW and run under Wine 10
 (menu, a game, quitting, settings in `%APPDATA%`); Wine's terminal does
 not pass the arrow keys, so steering is unchecked on Windows. macOS: not
 built here.
+
+## Ours
+
+- **How to play it, at the top of README.md.** A short note on installing and
+  starting it with av, or from a release archive; the original text follows
+  unchanged.

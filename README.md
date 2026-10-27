@@ -1,3 +1,16 @@
+> **Play it with Asciiverse.** With [av](https://asciiverse.sh), the Asciiverse
+> client:
+>
+> ```
+> av install nsnake
+> av play nsnake
+> ```
+>
+> Or download the archive for your system from this repository's Releases,
+> unpack it and run `./nsnake` (`nsnake.exe` on Windows).
+>
+> The original README follows.
+
 # nsnake
 
 Classic snake game on the terminal; made with C++ and ncurses.
